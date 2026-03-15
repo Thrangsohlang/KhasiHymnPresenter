@@ -22,7 +22,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string _hymnNumberLookupText = string.Empty;
     private LibraryFilterMode _selectedLibraryFilter = LibraryFilterMode.All;
     private SongDocument? _quickSelectHymn;
+    private SlideSection? _selectedActiveSlide;
     private bool _isFuzzySearchEnabled = true;
+    private bool _isSyncingActiveSlideSelection;
     private bool _isLoaded;
 
     public MainWindowViewModel(SongCatalogService catalogService, AppStateService stateService)
@@ -48,10 +50,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
         RemovePlanItemCommand = new RelayCommand(RemoveSelectedPlanItem, () => SelectedServicePlanEntry is not null);
         ClearPlanCommand = new RelayCommand(ClearPlan, () => ServicePlanItems.Count > 0);
         ReloadCatalogCommand = new RelayCommand(ReloadCatalog);
-        ShowPresenterCommand = new RelayCommand(ShowPresenter);
+        ShowSlideshowCommand = new RelayCommand(ShowSlideshow);
         SelectHymnByNumberCommand = new RelayCommand(SelectHymnByNumber, () => QuickSelectHymn is not null || LibraryItems.Count > 0);
         QueueQuickHymnCommand = new RelayCommand(QueueQuickHymn, () => QuickSelectHymn is not null);
         PresentQuickHymnCommand = new RelayCommand(PresentQuickHymn, () => QuickSelectHymn is not null);
+        QueueLibrarySongCommand = new RelayCommand<SongDocument>(QueueLibrarySong, song => song is not null);
+        PresentLibrarySongCommand = new RelayCommand<SongDocument>(PresentLibrarySong, song => song is not null);
+        PresentServicePlanItemCommand = new RelayCommand<ServicePlanEntry>(PresentServicePlanItem, entry => entry is not null);
+        RemoveServicePlanItemCommand = new RelayCommand<ServicePlanEntry>(RemoveServicePlanItem, entry => entry is not null);
+        JumpToSlideCommand = new RelayCommand<SlideSection>(JumpToSlide, slide => slide is not null && Presentation.HasActiveDeck);
         PreviousSlideCommand = new RelayCommand(MoveToPreviousSlide, () => Presentation.CanMovePrevious);
         NextSlideCommand = new RelayCommand(MoveToNextSlide, () => Presentation.CanMoveNext);
         BlankScreenCommand = new RelayCommand(() => Presentation.ToggleBlank(), () => Presentation.HasActiveDeck);
@@ -107,13 +114,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public RelayCommand ReloadCatalogCommand { get; }
 
-    public RelayCommand ShowPresenterCommand { get; }
+    public RelayCommand ShowSlideshowCommand { get; }
 
     public RelayCommand SelectHymnByNumberCommand { get; }
 
     public RelayCommand QueueQuickHymnCommand { get; }
 
     public RelayCommand PresentQuickHymnCommand { get; }
+
+    public RelayCommand<SongDocument> QueueLibrarySongCommand { get; }
+
+    public RelayCommand<SongDocument> PresentLibrarySongCommand { get; }
+
+    public RelayCommand<ServicePlanEntry> PresentServicePlanItemCommand { get; }
+
+    public RelayCommand<ServicePlanEntry> RemoveServicePlanItemCommand { get; }
+
+    public RelayCommand<SlideSection> JumpToSlideCommand { get; }
 
     public RelayCommand PreviousSlideCommand { get; }
 
@@ -129,7 +146,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public RelayCommand<ThemePreset> ApplyThemePresetCommand { get; }
 
-    public event EventHandler? OpenPresenterRequested;
+    public event EventHandler? OpenSlideshowRequested;
 
     public string SearchText
     {
@@ -189,6 +206,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
             {
                 OnPropertyChanged(nameof(QuickSelectTitle), nameof(QuickSelectSubtitle), nameof(HasQuickSelectHymn));
                 RefreshCommandStates();
+            }
+        }
+    }
+
+    public SlideSection? SelectedActiveSlide
+    {
+        get => _selectedActiveSlide;
+        set
+        {
+            if (SetProperty(ref _selectedActiveSlide, value) && !_isSyncingActiveSlideSelection && value is not null)
+            {
+                JumpToSlide(value);
             }
         }
     }
@@ -265,8 +294,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     public string CurrentPresentationSummary => Presentation.ActiveDeck is null
-        ? "Presenter idle"
-        : $"Presenting {Presentation.ActiveDeck.DisplayTitle} - {Presentation.SlideCounterText}";
+        ? "Slideshow idle"
+        : $"Projecting {Presentation.ActiveDeck.DisplayTitle} - {Presentation.SlideCounterText}";
 
     public string StorageSummary => $"State saved to {_stateService.StateFilePath}";
 
@@ -280,9 +309,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ? "Type a hymn number to narrow the list. Press Enter to select the closest result."
         : $"{QuickSelectHymn.SlideCountLabel} - ready to queue or present.";
 
-    public string LiveDeckTitle => Presentation.ActiveDeck?.DisplayTitle ?? "Presenter idle";
+    public string LiveDeckTitle => Presentation.ActiveDeck?.DisplayTitle ?? "Slideshow idle";
 
     public string LiveDeckSubtitle => Presentation.ActiveDeck?.DisplaySubtitle ?? "Send a service item or library selection to the presenter.";
+
+    public IEnumerable<SlideSection> ActivePresentationSlides => Presentation.ActiveDeck?.Slides ?? Enumerable.Empty<SlideSection>();
 
     public string CurrentSlideHeading => Presentation.CurrentSlide?.Heading ?? "Current Slide";
 
@@ -306,15 +337,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private void HandlePresentationChanged()
     {
+        SyncSelectedActiveSlide();
         PreviousSlideCommand.RaiseCanExecuteChanged();
         NextSlideCommand.RaiseCanExecuteChanged();
         BlankScreenCommand.RaiseCanExecuteChanged();
         BlackScreenCommand.RaiseCanExecuteChanged();
         ClearOverlayCommand.RaiseCanExecuteChanged();
+        JumpToSlideCommand.RaiseCanExecuteChanged();
         OnPropertyChanged(
             nameof(CurrentPresentationSummary),
             nameof(LiveDeckTitle),
             nameof(LiveDeckSubtitle),
+            nameof(ActivePresentationSlides),
+            nameof(SelectedActiveSlide),
             nameof(CurrentSlideHeading),
             nameof(CurrentSlideText),
             nameof(NextSlideHeading),
@@ -329,15 +364,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectHymnByNumberCommand.RaiseCanExecuteChanged();
         QueueQuickHymnCommand.RaiseCanExecuteChanged();
         PresentQuickHymnCommand.RaiseCanExecuteChanged();
+        JumpToSlideCommand.RaiseCanExecuteChanged();
         MovePlanItemUpCommand.RaiseCanExecuteChanged();
         MovePlanItemDownCommand.RaiseCanExecuteChanged();
         RemovePlanItemCommand.RaiseCanExecuteChanged();
         ClearPlanCommand.RaiseCanExecuteChanged();
     }
 
-    private void ShowPresenter()
+    private void ShowSlideshow()
     {
-        OpenPresenterRequested?.Invoke(this, EventArgs.Empty);
+        OpenSlideshowRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void MoveToPreviousSlide()
@@ -348,6 +384,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void MoveToNextSlide()
     {
         Presentation.Next();
+    }
+
+    private void SyncSelectedActiveSlide()
+    {
+        _isSyncingActiveSlideSelection = true;
+        SelectedActiveSlide = Presentation.CurrentSlide;
+        _isSyncingActiveSlideSelection = false;
     }
 
     public string RunSmokeTest()

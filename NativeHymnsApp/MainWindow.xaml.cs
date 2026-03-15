@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Interop;
-using Microsoft.Win32;
 using NativeHymnsApp.Models;
 using NativeHymnsApp.ViewModels;
 using NativeHymnsApp.Views;
@@ -12,22 +11,31 @@ public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
     private PresenterWindow? _presenterWindow;
+    private SlideshowControlWindow? _slideshowWindow;
+    private ThemeEditorWindow? _themeEditorWindow;
 
     public MainWindow(MainWindowViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         DataContext = viewModel;
-        _viewModel.OpenPresenterRequested += HandleOpenPresenterRequested;
+        _viewModel.OpenSlideshowRequested += HandleOpenSlideshowRequested;
     }
 
-    private void HandleOpenPresenterRequested(object? sender, EventArgs e)
+    private void HandleOpenSlideshowRequested(object? sender, EventArgs e)
     {
+        EnsureSlideshowWindow();
         EnsurePresenterWindow();
     }
 
     private void EnsurePresenterWindow()
     {
+        if (Screen.AllScreens.Length < 2)
+        {
+            _presenterWindow?.Hide();
+            return;
+        }
+
         if (_presenterWindow is { IsLoaded: true })
         {
             if (!_presenterWindow.IsVisible)
@@ -47,6 +55,29 @@ public partial class MainWindow : Window
         _presenterWindow.Show();
     }
 
+    private void EnsureSlideshowWindow()
+    {
+        if (_slideshowWindow is { IsLoaded: true })
+        {
+            if (!_slideshowWindow.IsVisible)
+            {
+                _slideshowWindow.Show();
+            }
+
+            _slideshowWindow.Activate();
+            return;
+        }
+
+        _slideshowWindow = new SlideshowControlWindow(_viewModel)
+        {
+            Owner = this
+        };
+        _slideshowWindow.Closed += (_, _) => _slideshowWindow = null;
+        PositionWorkbenchWindow(_slideshowWindow, 0.9, 0.88);
+        _slideshowWindow.Show();
+        _slideshowWindow.Activate();
+    }
+
     private static void PositionPresenterWindow(Window window)
     {
         var screens = Screen.AllScreens;
@@ -60,6 +91,21 @@ public partial class MainWindow : Window
         window.Height = bounds.Height;
         window.WindowState = WindowState.Normal;
         window.WindowState = WindowState.Maximized;
+    }
+
+    private void PositionWorkbenchWindow(Window window, double widthRatio, double heightRatio)
+    {
+        var handle = new WindowInteropHelper(this).Handle;
+        var screen = Screen.FromHandle(handle);
+        var workingArea = screen.WorkingArea;
+        var width = Math.Min(workingArea.Width - 48, (int)(workingArea.Width * widthRatio));
+        var height = Math.Min(workingArea.Height - 48, (int)(workingArea.Height * heightRatio));
+
+        window.WindowStartupLocation = WindowStartupLocation.Manual;
+        window.Width = Math.Max(window.MinWidth, width);
+        window.Height = Math.Max(window.MinHeight, height);
+        window.Left = workingArea.Left + Math.Max(24, (workingArea.Width - window.Width) / 2);
+        window.Top = workingArea.Top + Math.Max(24, (workingArea.Height - window.Height) / 2);
     }
 
     private void AddCustomSong_Click(object sender, RoutedEventArgs e)
@@ -82,6 +128,22 @@ public partial class MainWindow : Window
             return;
         }
 
+        EditCustomSong(song);
+    }
+
+    private void EditLibrarySong_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: SongDocument { Kind: SongKind.CustomSong } song })
+        {
+            return;
+        }
+
+        _viewModel.SelectedLibrarySong = song;
+        EditCustomSong(song);
+    }
+
+    private void EditCustomSong(SongDocument song)
+    {
         var dialog = new ContentEditorWindow(
             "Edit Custom Song",
             "Separate slides with a blank line. Optional first lines like Verse 1 or Chorus become slide headings.",
@@ -100,6 +162,17 @@ public partial class MainWindow : Window
         _viewModel.DeleteSelectedCustomSong();
     }
 
+    private void DeleteLibrarySong_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: SongDocument { Kind: SongKind.CustomSong } song })
+        {
+            return;
+        }
+
+        _viewModel.SelectedLibrarySong = song;
+        _viewModel.DeleteSelectedCustomSong();
+    }
+
     private void AddTextSlide_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new ContentEditorWindow(
@@ -113,23 +186,27 @@ public partial class MainWindow : Window
         }
     }
 
-    private void BrowseBackgroundImage_Click(object sender, RoutedEventArgs e)
+    private void OpenThemeEditor_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new Microsoft.Win32.OpenFileDialog
+        if (_themeEditorWindow is { IsLoaded: true })
         {
-            Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif",
-            Title = "Choose Background Image"
-        };
+            if (!_themeEditorWindow.IsVisible)
+            {
+                _themeEditorWindow.Show();
+            }
 
-        if (dialog.ShowDialog(this) == true)
-        {
-            _viewModel.SetBackgroundImagePath(dialog.FileName);
+            _themeEditorWindow.Activate();
+            return;
         }
-    }
 
-    private void ClearBackgroundImage_Click(object sender, RoutedEventArgs e)
-    {
-        _viewModel.ClearBackgroundImagePath();
+        _themeEditorWindow = new ThemeEditorWindow(_viewModel)
+        {
+            Owner = this
+        };
+        _themeEditorWindow.Closed += (_, _) => _themeEditorWindow = null;
+        PositionWorkbenchWindow(_themeEditorWindow, 0.45, 0.82);
+        _themeEditorWindow.Show();
+        _themeEditorWindow.Activate();
     }
 
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -139,7 +216,9 @@ public partial class MainWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
-        _viewModel.OpenPresenterRequested -= HandleOpenPresenterRequested;
+        _viewModel.OpenSlideshowRequested -= HandleOpenSlideshowRequested;
+        _slideshowWindow?.Close();
+        _themeEditorWindow?.Close();
         _presenterWindow?.Close();
         base.OnClosed(e);
     }

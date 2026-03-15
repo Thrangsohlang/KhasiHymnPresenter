@@ -4,31 +4,86 @@
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
 
+        <SolidColorBrush x:Key="AppCanvasBrush" Color="#F5F0E6" />
+        <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFFDFC" />
+        <SolidColorBrush x:Key="AppSurfaceAltBrush" Color="#E8DECF" />
+        <SolidColorBrush x:Key="AppSurfaceStrongBrush" Color="#DCCBB3" />
+        <SolidColorBrush x:Key="AppInkBrush" Color="#1F2A30" />
+        <SolidColorBrush x:Key="AppMutedInkBrush" Color="#5F6D72" />
+        <SolidColorBrush x:Key="AppBorderBrush" Color="#CDBCA7" />
+        <SolidColorBrush x:Key="AppAccentBrush" Color="#A6652B" />
+        <SolidColorBrush x:Key="AppAccentSoftBrush" Color="#E6C39B" />
+        <SolidColorBrush x:Key="AppHighlightBrush" Color="#2F5B6A" />
+        <SolidColorBrush x:Key="AppDangerBrush" Color="#A54545" />
+
         <Style TargetType="Window">
-            <Setter Property="Background" Value="#0B1015" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
+            <Setter Property="Background" Value="{StaticResource AppCanvasBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
         </Style>
 
         <Style TargetType="Menu">
-            <Setter Property="Background" Value="#0F161B" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
             <Setter Property="Padding" Value="10,4" />
         </Style>
 
         <Style TargetType="MenuItem">
-            <Setter Property="Foreground" Value="#F4F1E8" />
-            <Setter Property="Background" Value="#0F161B" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
             <Setter Property="Padding" Value="10,6" />
             <Setter Property="Margin" Value="2,0" />
         </Style>
 
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="34" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceAltBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AppHighlightBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AppAccentSoftBrush}" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource AppAccentBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AppSurfaceStrongBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="Button">
             <Setter Property="Margin" Value="0,0,8,8" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="Background" Value="#243848" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
-            <Setter Property="BorderBrush" Value="#34586E" />
+            <Setter Property="Padding" Value="14,9" />
+            <Setter Property="Background" Value="{StaticResource AppHighlightBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppHighlightBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Cursor" Value="Hand" />
@@ -47,11 +102,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#2F4E60" />
-                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#4A7A92" />
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AppAccentBrush}" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1B2E39" />
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.82" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.45" />
@@ -64,30 +119,32 @@
 
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0,0,0,8" />
-            <Setter Property="Padding" Value="8" />
-            <Setter Property="Background" Value="#13202A" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
-            <Setter Property="BorderBrush" Value="#34586E" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style TargetType="ComboBox">
             <Setter Property="Margin" Value="0,0,0,8" />
             <Setter Property="Padding" Value="6" />
-            <Setter Property="Background" Value="#13202A" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
-            <Setter Property="BorderBrush" Value="#34586E" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style TargetType="CheckBox">
             <Setter Property="Margin" Value="0,0,0,8" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style TargetType="ListBox">
-            <Setter Property="Background" Value="#101920" />
-            <Setter Property="Foreground" Value="#F4F1E8" />
-            <Setter Property="BorderBrush" Value="#2B4658" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
 
         <Style TargetType="ListBoxItem">
@@ -97,6 +154,13 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        </Style>
+
+        <Style TargetType="ToolTip">
+            <Setter Property="Background" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppInkBrush}" />
+            <Setter Property="Padding" Value="8,5" />
         </Style>
     </Application.Resources>
 </Application>

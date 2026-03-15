@@ -1,4 +1,3 @@
-
 <Window x:Class="NativeHymnsApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,10 +6,10 @@
         xmlns:models="clr-namespace:NativeHymnsApp.Models"
         mc:Ignorable="d"
         Title="Khasi Hymns Presenter"
-        Width="1360"
-        Height="820"
-        MinWidth="1100"
-        MinHeight="720"
+        Width="1460"
+        Height="920"
+        MinWidth="1180"
+        MinHeight="760"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize"
@@ -19,7 +18,7 @@
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
     <Window.InputBindings>
-        <KeyBinding Key="F5" Command="{Binding ShowPresenterCommand}" />
+        <KeyBinding Key="F5" Command="{Binding ShowSlideshowCommand}" />
         <KeyBinding Key="PageDown" Command="{Binding NextSlideCommand}" />
         <KeyBinding Key="PageUp" Command="{Binding PreviousSlideCommand}" />
         <KeyBinding Key="Right" Command="{Binding NextSlideCommand}" />
@@ -30,43 +29,36 @@
     </Window.InputBindings>
 
     <Window.Resources>
-        <LinearGradientBrush x:Key="ShellBackground" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#0B1015" Offset="0" />
-            <GradientStop Color="#142431" Offset="0.58" />
-            <GradientStop Color="#18343D" Offset="1" />
-        </LinearGradientBrush>
-
-        <Style x:Key="PanelCardStyle" TargetType="Border">
+        <Style x:Key="ShellCardStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="18" />
-            <Setter Property="Margin" Value="0,0,16,16" />
-            <Setter Property="Background" Value="#111B22" />
-            <Setter Property="BorderBrush" Value="#29404C" />
+            <Setter Property="Background" Value="{StaticResource AppSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
-        <Style x:Key="SubCardStyle" TargetType="Border">
-            <Setter Property="CornerRadius" Value="16" />
-            <Setter Property="Padding" Value="16" />
-            <Setter Property="Background" Value="#16242D" />
-            <Setter Property="BorderBrush" Value="#314C5C" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-
-        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#D7C08C" />
-            <Setter Property="Margin" Value="0,12,0,6" />
-        </Style>
-
-        <Style x:Key="MutedTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#9AB8C8" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="22" />
+        <Style x:Key="HeroTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Georgia" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource AppInkBrush}" />
+        </Style>
+
+        <Style x:Key="MutedTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource AppMutedInkBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource AppAccentBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,6" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
@@ -75,17 +67,26 @@
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Padding" Value="14,10" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="Width" Value="130" />
+            <Setter Property="Width" Value="132" />
             <Setter Property="MaxLength" Value="4" />
         </Style>
 
-        <Style TargetType="TabItem">
-            <Setter Property="Padding" Value="14,8" />
+        <Style x:Key="CustomSongIconButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Kind}" Value="{x:Static models:SongKind.CustomSong}">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <DockPanel Background="{StaticResource ShellBackground}">
-        <Border DockPanel.Dock="Top" Background="#D80F161B" BorderBrush="#263C4A" BorderThickness="0,0,0,1">
+    <DockPanel Background="{StaticResource AppCanvasBrush}">
+        <Border DockPanel.Dock="Top"
+                Margin="0,0,0,1"
+                Background="{StaticResource AppSurfaceBrush}"
+                BorderBrush="{StaticResource AppBorderBrush}"
+                BorderThickness="0,0,0,1">
             <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Reload Data" Command="{Binding ReloadCatalogCommand}" />
@@ -97,12 +98,8 @@
                     <MenuItem Header="_Edit Selected Custom Song" Click="EditCustomSong_Click" IsEnabled="{Binding CanEditSelectedCustomSong}" />
                     <MenuItem Header="_Delete Selected Custom Song" Click="DeleteCustomSong_Click" IsEnabled="{Binding CanEditSelectedCustomSong}" />
                 </MenuItem>
-                <MenuItem Header="_Service">
-                    <MenuItem Header="Add _Program Slide" Click="AddTextSlide_Click" />
-                    <MenuItem Header="_Clear Plan" Command="{Binding ClearPlanCommand}" />
-                </MenuItem>
-                <MenuItem Header="_Presenter">
-                    <MenuItem Header="_Open Presenter" Command="{Binding ShowPresenterCommand}" />
+                <MenuItem Header="_Slideshow">
+                    <MenuItem Header="_Open Slideshow" Command="{Binding ShowSlideshowCommand}" />
                     <MenuItem Header="_Previous Slide" Command="{Binding PreviousSlideCommand}" />
                     <MenuItem Header="_Next Slide" Command="{Binding NextSlideCommand}" />
                     <Separator />
@@ -111,19 +108,17 @@
                     <MenuItem Header="_Clear Overlay" Command="{Binding ClearOverlayCommand}" />
                 </MenuItem>
                 <MenuItem Header="_View">
-                    <MenuItem Header="_Browse Background" Click="BrowseBackgroundImage_Click" />
-                    <MenuItem Header="_Clear Background" Click="ClearBackgroundImage_Click" />
-                    <MenuItem Header="_Reset Theme" Command="{Binding ResetThemeCommand}" />
+                    <MenuItem Header="_Theme Editor" Click="OpenThemeEditor_Click" />
                 </MenuItem>
             </Menu>
         </Border>
 
         <Border DockPanel.Dock="Top"
                 Margin="16,16,16,12"
-                Padding="20"
+                Padding="22"
                 CornerRadius="22"
-                Background="#CC0D1419"
-                BorderBrush="#355566"
+                Background="{StaticResource AppSurfaceBrush}"
+                BorderBrush="{StaticResource AppBorderBrush}"
                 BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -132,15 +127,15 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel>
-                    <TextBlock FontFamily="Georgia" FontSize="30" FontWeight="Bold" Text="Khasi Hymns Presenter" />
-                    <TextBlock Margin="0,4,0,0" Foreground="#D3C9B3" Text="{Binding DataSourceSummary}" TextWrapping="Wrap" />
-                    <TextBlock Foreground="#91BBD1" Text="{Binding CurrentPresentationSummary}" TextWrapping="Wrap" />
+                    <TextBlock Style="{StaticResource HeroTitleStyle}" Text="Khasi Hymns Presenter" />
+                    <TextBlock Margin="0,6,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding DataSourceSummary}" />
+                    <TextBlock Margin="0,4,0,0" Foreground="{StaticResource AppHighlightBrush}" Text="{Binding CurrentPresentationSummary}" TextWrapping="Wrap" />
                 </StackPanel>
 
-                <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Command="{Binding ShowPresenterCommand}" Content="Open Presenter" />
-                    <Button Command="{Binding PresentSelectedPlanEntryCommand}" Content="Present Plan Item" />
-                    <Button Command="{Binding PresentSelectedSongCommand}" Content="Present Selection" />
+                <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Command="{Binding ShowSlideshowCommand}" Content="Open Slideshow" />
+                    <Button Click="OpenThemeEditor_Click" Content="Theme Editor" />
+                    <Button Command="{Binding ReloadCatalogCommand}" Content="Reload" />
                 </WrapPanel>
             </Grid>
         </Border>
@@ -148,44 +143,32 @@
         <Grid Margin="16,0,16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="360" />
+                <ColumnDefinition Width="12" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="420" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Style="{StaticResource PanelCardStyle}">
+            <Border Grid.Column="0" Style="{StaticResource ShellCardStyle}" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Style="{StaticResource CardTitleStyle}" Text="Service Plan" />
-                        <TextBlock Style="{StaticResource MutedTextStyle}" Text="{Binding ServicePlanSummary}" />
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Service Plan" />
+                        <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding ServicePlanSummary}" />
                     </StackPanel>
 
                     <WrapPanel Grid.Row="1" Margin="0,16,0,8">
                         <Button Click="AddTextSlide_Click" Content="Add Program Slide" />
-                        <Button Command="{Binding PresentSelectedPlanEntryCommand}" Content="Present Selected" />
+                        <Button Command="{Binding PresentSelectedPlanEntryCommand}" Content="Load Selected" />
+                        <Button Command="{Binding MovePlanItemUpCommand}" Content="Move Up" />
+                        <Button Command="{Binding MovePlanItemDownCommand}" Content="Move Down" />
+                        <Button Command="{Binding ClearPlanCommand}" Content="Clear" />
                     </WrapPanel>
 
-                    <Border Grid.Row="2" Style="{StaticResource SubCardStyle}" Margin="0,0,0,14">
-                        <StackPanel>
-                            <TextBlock Foreground="#D7C08C" FontWeight="SemiBold" Text="Selected Queue Item" />
-                            <TextBlock Margin="0,8,0,0" FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedPlanTitle}" TextWrapping="Wrap" />
-                            <TextBlock Margin="0,6,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding SelectedPlanSubtitle}" />
-                            <WrapPanel Margin="0,14,0,0">
-                                <Button Command="{Binding MovePlanItemUpCommand}" Content="Move Up" />
-                                <Button Command="{Binding MovePlanItemDownCommand}" Content="Move Down" />
-                                <Button Command="{Binding RemovePlanItemCommand}" Content="Remove" />
-                                <Button Command="{Binding ClearPlanCommand}" Content="Clear Plan" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <ListBox Grid.Row="3"
+                    <ListBox Grid.Row="2"
                              ItemsSource="{Binding ServicePlanItems}"
                              SelectedItem="{Binding SelectedServicePlanEntry}"
                              BorderThickness="0"
@@ -193,48 +176,37 @@
                              HorizontalContentAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:ServicePlanEntry}">
-                                <Border x:Name="PlanCard"
-                                        Margin="0,0,0,10"
-                                        Padding="14"
-                                        CornerRadius="14"
-                                        Background="#15232B"
-                                        BorderBrush="#274553"
+                                <Border x:Name="PlanRow"
+                                        Margin="0,0,0,8"
+                                        Padding="12"
+                                        CornerRadius="12"
+                                        Background="{StaticResource AppSurfaceAltBrush}"
+                                        BorderBrush="{StaticResource AppBorderBrush}"
                                         BorderThickness="1">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="72" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Border Width="60"
-                                                Height="60"
-                                                CornerRadius="18"
-                                                Background="#20323D"
-                                                BorderBrush="#355566"
-                                                BorderThickness="1">
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock HorizontalAlignment="Center"
-                                                           FontSize="20"
-                                                           FontWeight="Bold"
-                                                           Text="{Binding Deck.HymnNumber, TargetNullValue=--}" />
-                                                <TextBlock HorizontalAlignment="Center"
-                                                           FontSize="10"
-                                                           Foreground="#9AB8C8"
-                                                           Text="{Binding KindLabel}"
-                                                           TextWrapping="Wrap" />
-                                            </StackPanel>
-                                        </Border>
-
-                                        <StackPanel Grid.Column="1" Margin="14,0,0,0">
-                                            <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding Deck.Title}" TextWrapping="Wrap" />
-                                            <TextBlock Margin="0,4,0,0" Foreground="#D7C08C" Text="{Binding DisplayTitle}" TextWrapping="Wrap" />
-                                            <TextBlock Margin="0,4,0,0" Foreground="#8CB3C8" Text="{Binding SlideCountLabel}" />
+                                    <DockPanel LastChildFill="True">
+                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                            <Button Style="{StaticResource IconButtonStyle}"
+                                                    ToolTip="Load to slideshow"
+                                                    Command="{Binding DataContext.PresentServicePlanItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="&#xE768;" />
+                                            <Button Style="{StaticResource IconButtonStyle}"
+                                                    ToolTip="Remove from plan"
+                                                    Command="{Binding DataContext.RemoveServicePlanItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="&#xE74D;" />
                                         </StackPanel>
-                                    </Grid>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding DisplayTitle}" TextWrapping="Wrap" />
+                                            <TextBlock Margin="0,4,0,0" Foreground="{StaticResource AppMutedInkBrush}" Text="{Binding KindLabel}" />
+                                            <TextBlock Margin="0,2,0,0" Foreground="{StaticResource AppMutedInkBrush}" Text="{Binding SlideCountLabel}" />
+                                        </StackPanel>
+                                    </DockPanel>
                                 </Border>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
-                                        <Setter TargetName="PlanCard" Property="Background" Value="#1C3441" />
-                                        <Setter TargetName="PlanCard" Property="BorderBrush" Value="#D7C08C" />
+                                        <Setter TargetName="PlanRow" Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
+                                        <Setter TargetName="PlanRow" Property="Background" Value="{StaticResource AppAccentSoftBrush}" />
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
                             </DataTemplate>
@@ -243,241 +215,143 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Column="1" Margin="0,0,16,0">
+            <GridSplitter Grid.Column="1"
+                          Width="12"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          Background="Transparent"
+                          ShowsPreview="True" />
+
+            <Grid Grid.Column="2" Margin="0,0,0,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="16" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="260" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Style="{StaticResource PanelCardStyle}" Margin="0,0,0,16">
+                <Border Grid.Row="0" Style="{StaticResource ShellCardStyle}">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="18" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="170" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                        <DockPanel Grid.Row="0">
-                            <StackPanel DockPanel.Dock="Left" MaxWidth="420">
-                                <TextBlock Style="{StaticResource CardTitleStyle}" Text="Live Control" />
-                                <TextBlock Margin="0,8,0,0" FontSize="20" FontWeight="SemiBold" Text="{Binding LiveDeckTitle}" TextWrapping="Wrap" />
-                                <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding LiveDeckSubtitle}" />
-                            </StackPanel>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Quick Hymn Number" />
+                            <TextBox Style="{StaticResource NumberLookupTextBoxStyle}"
+                                     Text="{Binding HymnNumberLookupText, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding SelectHymnByNumberCommand}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </StackPanel>
 
-                            <WrapPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                <Button Command="{Binding PreviousSlideCommand}" Content="Previous" />
-                                <Button Command="{Binding NextSlideCommand}" Content="Next" />
-                                <Button Command="{Binding BlankScreenCommand}" Content="Blank" />
-                                <Button Command="{Binding BlackScreenCommand}" Content="Black" />
-                                <Button Command="{Binding ClearOverlayCommand}" Content="Clear" />
-                            </WrapPanel>
-                        </DockPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Search Library" />
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding QuickSelectSubtitle}" />
+                        </StackPanel>
 
-                        <Grid Grid.Row="1" Margin="0,18,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="3" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Filter" />
+                            <ComboBox ItemsSource="{Binding LibraryFilters}" SelectedItem="{Binding SelectedLibraryFilter}" />
+                            <CheckBox Content="Fuzzy matching" IsChecked="{Binding IsFuzzySearchEnabled}" />
+                        </StackPanel>
 
-                            <Border Style="{StaticResource SubCardStyle}" Margin="0,0,10,0">
-                                <StackPanel>
-                                    <TextBlock Foreground="#D7C08C" FontWeight="SemiBold" Text="{Binding CurrentSlideHeading}" />
-                                    <TextBlock Margin="0,10,0,0"
-                                               FontSize="18"
-                                               FontWeight="SemiBold"
-                                               Text="Current Slide"
-                                               TextWrapping="Wrap" />
-                                    <TextBlock Margin="0,8,0,0"
-                                               FontFamily="{Binding PresenterDisplay.BodyFontFamily}"
-                                               FontSize="18"
-                                               Foreground="{Binding PresenterDisplay.ForegroundBrush}"
-                                               Text="{Binding CurrentSlideText}"
-                                               TextAlignment="{Binding PresenterDisplay.DisplayTextAlignment}"
-                                               TextWrapping="Wrap" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1" Style="{StaticResource SubCardStyle}" Margin="10,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Foreground="#D7C08C" FontWeight="SemiBold" Text="{Binding NextSlideHeading}" />
-                                    <TextBlock Margin="0,10,0,0"
-                                               FontSize="18"
-                                               FontWeight="SemiBold"
-                                               Text="Upcoming Slide"
-                                               TextWrapping="Wrap" />
-                                    <TextBlock Margin="0,8,0,0"
-                                               FontFamily="{Binding PresenterDisplay.BodyFontFamily}"
-                                               FontSize="18"
-                                               Foreground="{Binding PresenterDisplay.ForegroundBrush}"
-                                               Text="{Binding NextSlideText}"
-                                               TextAlignment="{Binding PresenterDisplay.DisplayTextAlignment}"
-                                               TextWrapping="Wrap" />
-                                </StackPanel>
-                            </Border>
-                        </Grid>
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Top">
+                            <Button Style="{StaticResource IconButtonStyle}"
+                                    ToolTip="Select hymn number"
+                                    Command="{Binding SelectHymnByNumberCommand}"
+                                    Content="&#xE8A1;" />
+                            <Button Style="{StaticResource IconButtonStyle}"
+                                    ToolTip="Add custom song"
+                                    Click="AddCustomSong_Click"
+                                    Content="&#xE710;" />
+                            <Button Style="{StaticResource IconButtonStyle}"
+                                    ToolTip="Reload catalog"
+                                    Command="{Binding ReloadCatalogCommand}"
+                                    Content="&#xE72C;" />
+                        </StackPanel>
                     </Grid>
                 </Border>
 
-                <Border Grid.Row="1" Style="{StaticResource PanelCardStyle}" Margin="0,0,0,16">
+                <Border Grid.Row="2" Style="{StaticResource ShellCardStyle}" Padding="0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <DockPanel Grid.Row="0" Margin="0,0,0,14">
-                            <StackPanel DockPanel.Dock="Left" MaxWidth="470">
-                                <TextBlock Style="{StaticResource CardTitleStyle}" Text="{Binding PreviewTitle}" />
-                                <TextBlock Margin="0,6,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding PreviewSubtitle}" />
+                        <DockPanel Grid.Row="0" Margin="18,18,18,10">
+                            <StackPanel DockPanel.Dock="Left">
+                                <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Matching Hymns" />
+                                <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding LibrarySummary}" />
                             </StackPanel>
 
-                            <WrapPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                <Button Command="{Binding AddSelectedToPlanCommand}" Content="Queue Selection" />
-                                <Button Command="{Binding PresentSelectedSongCommand}" Content="Present Selection" />
-                            </WrapPanel>
+                            <TextBlock DockPanel.Dock="Right"
+                                       VerticalAlignment="Bottom"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppHighlightBrush}"
+                                       Text="{Binding QuickSelectTitle}" />
                         </DockPanel>
 
-                        <Border Grid.Row="1"
-                                CornerRadius="24"
-                                Padding="18"
-                                BorderBrush="#3C5A6A"
-                                BorderThickness="1"
-                                Background="{Binding PresenterDisplay.DisplayBackgroundBrush}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
+                        <ListBox Grid.Row="1"
+                                 Margin="10,0,10,10"
+                                 ItemsSource="{Binding LibraryItems}"
+                                 SelectedItem="{Binding SelectedLibrarySong}"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 HorizontalContentAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:SongDocument}">
+                                    <Border x:Name="LibraryRow"
+                                            Margin="0,0,0,6"
+                                            Padding="12"
+                                            CornerRadius="12"
+                                            Background="{StaticResource AppSurfaceAltBrush}"
+                                            BorderBrush="{StaticResource AppBorderBrush}"
+                                            BorderThickness="1">
+                                        <DockPanel LastChildFill="True">
+                                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Style="{StaticResource IconButtonStyle}"
+                                                        ToolTip="Queue in service plan"
+                                                        Command="{Binding DataContext.QueueLibrarySongCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="&#xE710;" />
+                                                <Button Style="{StaticResource IconButtonStyle}"
+                                                        ToolTip="Load to slideshow"
+                                                        Command="{Binding DataContext.PresentLibrarySongCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="&#xE768;" />
+                                                <Button Style="{StaticResource CustomSongIconButtonStyle}"
+                                                        ToolTip="Edit custom song"
+                                                        Tag="{Binding}"
+                                                        Click="EditLibrarySong_Click"
+                                                        Content="&#xE70F;" />
+                                                <Button Style="{StaticResource CustomSongIconButtonStyle}"
+                                                        ToolTip="Delete custom song"
+                                                        Tag="{Binding}"
+                                                        Click="DeleteLibrarySong_Click"
+                                                        Content="&#xE74D;" />
+                                            </StackPanel>
 
-                                <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                                    <TextBlock FontFamily="{Binding PresenterDisplay.TitleFontFamily}"
-                                               FontSize="{Binding PresenterDisplay.TitleFontSize}"
-                                               FontWeight="Bold"
-                                               Foreground="{Binding PresenterDisplay.ForegroundBrush}"
-                                               Text="{Binding PreviewTitle}"
-                                               TextWrapping="Wrap" />
-                                    <TextBlock Margin="0,4,0,0"
-                                               Foreground="{Binding PresenterDisplay.AccentBrush}"
-                                               Text="{Binding PreviewSubtitle}"
-                                               TextWrapping="Wrap" />
-                                </StackPanel>
-
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl ItemsSource="{Binding PreviewSlides}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="{x:Type models:SlideSection}">
-                                                <Border Margin="0,0,0,16" Padding="18" CornerRadius="18" Background="#B4172029">
-                                                    <StackPanel>
-                                                        <TextBlock Foreground="{Binding DataContext.PresenterDisplay.AccentBrush, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                   FontWeight="Bold"
-                                                                   Text="{Binding Heading}" />
-                                                        <TextBlock Margin="0,12,0,0"
-                                                                   FontFamily="{Binding DataContext.PresenterDisplay.BodyFontFamily, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                   FontSize="{Binding DataContext.PresenterDisplay.BodyFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                   Foreground="{Binding DataContext.PresenterDisplay.ForegroundBrush, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                   Text="{Binding Text}"
-                                                                   TextAlignment="{Binding DataContext.PresenterDisplay.DisplayTextAlignment, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                   TextWrapping="Wrap" />
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                    </Grid>
-                </Border>
-            </Grid>
-            <TabControl Grid.Column="2" Margin="0,0,0,16" Background="#111B22" BorderBrush="#29404C">
-                <TabItem Header="Library">
-                    <Border Padding="18" Background="#111B22">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Row="0">
-                                <TextBlock Style="{StaticResource CardTitleStyle}" Text="Library" />
-                                <TextBlock Style="{StaticResource MutedTextStyle}" Text="{Binding LibrarySummary}" />
-                            </StackPanel>
-
-                            <Border Grid.Row="1" Style="{StaticResource SubCardStyle}" Margin="0,16,0,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Foreground="#D7C08C" FontWeight="SemiBold" Text="Quick Hymn Number" />
-                                        <TextBlock Margin="0,6,0,0" Style="{StaticResource MutedTextStyle}" Text="Type a hymn number to narrow the library and jump straight to the exact hymn when available." />
-                                        <WrapPanel Margin="0,14,0,0">
-                                            <TextBox Style="{StaticResource NumberLookupTextBoxStyle}"
-                                                     Text="{Binding HymnNumberLookupText, UpdateSourceTrigger=PropertyChanged}">
-                                                <TextBox.InputBindings>
-                                                    <KeyBinding Key="Return" Command="{Binding SelectHymnByNumberCommand}" />
-                                                </TextBox.InputBindings>
-                                            </TextBox>
-                                            <Button Command="{Binding SelectHymnByNumberCommand}" Content="Select" />
-                                        </WrapPanel>
-                                        <TextBlock Margin="0,14,0,0" FontSize="18" FontWeight="SemiBold" Text="{Binding QuickSelectTitle}" TextWrapping="Wrap" />
-                                        <TextBlock Margin="0,6,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding QuickSelectSubtitle}" />
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Bottom">
-                                        <Button Command="{Binding QueueQuickHymnCommand}" Content="Queue" />
-                                        <Button Command="{Binding PresentQuickHymnCommand}" Content="Present" />
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-
-                            <Grid Grid.Row="2" Margin="0,0,0,12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="150" />
-                                </Grid.ColumnDefinitions>
-
-                                <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                    <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Search Library" />
-                                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
-                                    <CheckBox Content="Enable fuzzy title matching" IsChecked="{Binding IsFuzzySearchEnabled}" />
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Filter" />
-                                    <ComboBox ItemsSource="{Binding LibraryFilters}" SelectedItem="{Binding SelectedLibraryFilter}" />
-                                </StackPanel>
-                            </Grid>
-
-                            <ListBox Grid.Row="3"
-                                     ItemsSource="{Binding LibraryItems}"
-                                     SelectedItem="{Binding SelectedLibrarySong}"
-                                     BorderThickness="0"
-                                     Background="Transparent"
-                                     HorizontalContentAlignment="Stretch">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:SongDocument}">
-                                        <Border x:Name="LibraryCard"
-                                                Margin="0,0,0,10"
-                                                Padding="14"
-                                                CornerRadius="14"
-                                                Background="#15232B"
-                                                BorderBrush="#274553"
-                                                BorderThickness="1">
-                                            <Grid>
+                                            <Grid Margin="0,0,12,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="72" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <Border Width="60"
-                                                        Height="60"
-                                                        CornerRadius="18"
-                                                        Background="#20323D"
-                                                        BorderBrush="#355566"
+                                                <Border Width="58"
+                                                        Height="58"
+                                                        VerticalAlignment="Center"
+                                                        CornerRadius="16"
+                                                        Background="{StaticResource AppSurfaceBrush}"
+                                                        BorderBrush="{StaticResource AppBorderBrush}"
                                                         BorderThickness="1">
                                                     <StackPanel VerticalAlignment="Center">
                                                         <TextBlock HorizontalAlignment="Center"
@@ -486,113 +360,98 @@
                                                                    Text="{Binding HymnNumber, TargetNullValue=C}" />
                                                         <TextBlock HorizontalAlignment="Center"
                                                                    FontSize="10"
-                                                                   Foreground="#9AB8C8"
-                                                                   Text="{Binding KindLabel}"
-                                                                   TextWrapping="Wrap" />
+                                                                   Foreground="{StaticResource AppMutedInkBrush}"
+                                                                   Text="{Binding KindLabel}" />
                                                     </StackPanel>
                                                 </Border>
 
-                                                <StackPanel Grid.Column="1" Margin="14,0,0,0">
-                                                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding Title}" TextWrapping="Wrap" />
-                                                    <TextBlock Margin="0,4,0,0" Foreground="#D7C08C" Text="{Binding DisplaySubtitle}" TextWrapping="Wrap" />
-                                                    <TextBlock Margin="0,4,0,0" Foreground="#8CB3C8" Text="{Binding SlideCountLabel}" />
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock FontSize="17"
+                                                               FontWeight="SemiBold"
+                                                               Text="{Binding Title}"
+                                                               TextWrapping="NoWrap"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Margin="0,4,0,0"
+                                                               Foreground="{StaticResource AppMutedInkBrush}"
+                                                               Text="{Binding DisplaySubtitle}"
+                                                               TextWrapping="NoWrap"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Margin="0,2,0,0"
+                                                               Foreground="{StaticResource AppMutedInkBrush}"
+                                                               Text="{Binding SlideCountLabel}" />
                                                 </StackPanel>
                                             </Grid>
-                                        </Border>
-                                        <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
-                                                <Setter TargetName="LibraryCard" Property="Background" Value="#1C3441" />
-                                                <Setter TargetName="LibraryCard" Property="BorderBrush" Value="#D7C08C" />
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Grid>
-                    </Border>
-                </TabItem>
-                <TabItem Header="Theme">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#111B22">
-                        <StackPanel Margin="18">
-                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="Weekly Slide Theme" />
-                            <TextBlock Margin="0,4,0,12" Style="{StaticResource MutedTextStyle}" Text="Keep the presenter styling here so the live operator surface stays focused on the current service flow." />
+                                        </DockPanel>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                            <Setter TargetName="LibraryRow" Property="BorderBrush" Value="{StaticResource AppAccentBrush}" />
+                                            <Setter TargetName="LibraryRow" Property="Background" Value="{StaticResource AppAccentSoftBrush}" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
 
-                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Presets" />
-                            <ItemsControl Margin="0,8,0,16" ItemsSource="{Binding ThemePresets}">
+                <GridSplitter Grid.Row="3"
+                              Height="12"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Background="Transparent"
+                              ShowsPreview="True" />
+
+                <Border Grid.Row="4" Style="{StaticResource ShellCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                            <StackPanel DockPanel.Dock="Left" MaxWidth="560">
+                                <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{Binding PreviewTitle}" />
+                                <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding PreviewSubtitle}" />
+                            </StackPanel>
+                            <WrapPanel DockPanel.Dock="Right">
+                                <Button Command="{Binding AddSelectedToPlanCommand}" Content="Queue Selection" />
+                                <Button Command="{Binding PresentSelectedSongCommand}" Content="Load Selection" />
+                            </WrapPanel>
+                        </DockPanel>
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding PreviewSlides}">
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:ThemePreset}">
-                                        <Border Margin="0,0,0,12" Padding="12" CornerRadius="14" Background="#15232B" BorderBrush="#274553" BorderThickness="1">
-                                            <DockPanel>
-                                                <StackPanel DockPanel.Dock="Left" MaxWidth="240">
-                                                    <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
-                                                    <TextBlock Margin="0,4,0,0" Style="{StaticResource MutedTextStyle}" Text="{Binding Description}" />
-                                                </StackPanel>
-                                                <Button DockPanel.Dock="Right"
-                                                        HorizontalAlignment="Right"
-                                                        VerticalAlignment="Center"
-                                                        Command="{Binding DataContext.ApplyThemePresetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}"
-                                                        Content="Apply" />
-                                            </DockPanel>
+                                    <DataTemplate DataType="{x:Type models:SlideSection}">
+                                        <Border Margin="0,0,0,10"
+                                                Padding="12"
+                                                CornerRadius="12"
+                                                Background="{StaticResource AppSurfaceAltBrush}"
+                                                BorderBrush="{StaticResource AppBorderBrush}"
+                                                BorderThickness="1">
+                                            <StackPanel>
+                                                <TextBlock Style="{StaticResource SectionLabelStyle}" Text="{Binding Heading}" />
+                                                <TextBlock Margin="0,6,0,0"
+                                                           Text="{Binding Text}"
+                                                           TextWrapping="Wrap" />
+                                            </StackPanel>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-
-                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Typography" />
-                            <TextBlock Text="Font family" />
-                            <ComboBox ItemsSource="{Binding FontFamilyOptions}" SelectedItem="{Binding Theme.FontFamilyName}" />
-
-                            <TextBlock Text="Title font size" />
-                            <TextBox Text="{Binding Theme.TitleFontSize}" />
-
-                            <TextBlock Text="Body font size" />
-                            <TextBox Text="{Binding Theme.BodyFontSize}" />
-
-                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Layout" />
-                            <TextBlock Text="Content alignment" />
-                            <ComboBox ItemsSource="{Binding AlignmentOptions}" SelectedItem="{Binding Theme.ContentAlignment}" />
-
-                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Colors" />
-                            <TextBlock Text="Background hex" />
-                            <TextBox Text="{Binding Theme.BackgroundHex}" />
-
-                            <TextBlock Text="Secondary background hex" />
-                            <TextBox Text="{Binding Theme.SecondaryBackgroundHex}" />
-
-                            <TextBlock Text="Foreground hex" />
-                            <TextBox Text="{Binding Theme.ForegroundHex}" />
-
-                            <TextBlock Text="Accent hex" />
-                            <TextBox Text="{Binding Theme.AccentHex}" />
-
-                            <TextBlock Text="Overlay hex" />
-                            <TextBox Text="{Binding Theme.OverlayHex}" />
-
-                            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Footer And Image" />
-                            <TextBlock Text="Footer text" />
-                            <TextBox Text="{Binding Theme.FooterText}" />
-
-                            <TextBlock Text="Background image" />
-                            <TextBox Text="{Binding Theme.BackgroundImagePath}" IsReadOnly="True" />
-
-                            <WrapPanel>
-                                <Button Click="BrowseBackgroundImage_Click" Content="Browse Image" />
-                                <Button Click="ClearBackgroundImage_Click" Content="Clear Image" />
-                                <Button Command="{Binding ResetThemeCommand}" Content="Reset Theme" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
-            </TabControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
 
         <Border DockPanel.Dock="Bottom"
                 Margin="16,0,16,16"
                 Padding="14,10"
                 CornerRadius="18"
-                Background="#C010171D"
-                BorderBrush="#2F4B5B"
+                Background="{StaticResource AppSurfaceBrush}"
+                BorderBrush="{StaticResource AppBorderBrush}"
                 BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -600,8 +459,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Foreground="#9AB8C8" Text="{Binding StorageSummary}" TextWrapping="Wrap" />
-                <TextBlock Grid.Column="1" Foreground="#D7C08C" Text="Desktop WPF app | offline-first data" />
+                <TextBlock Style="{StaticResource MutedTextStyle}" Text="{Binding StorageSummary}" />
+                <TextBlock Grid.Column="1" Foreground="{StaticResource AppAccentBrush}" Text="Planning workspace | live slideshow window | projector output" />
             </Grid>
         </Border>
     </DockPanel>

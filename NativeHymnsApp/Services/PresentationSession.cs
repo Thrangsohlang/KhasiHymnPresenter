@@ -65,6 +65,23 @@ public sealed class PresentationSession : ObservableObject
         RaiseDeckChanged();
     }
 
+    public void GoToSlide(int index)
+    {
+        if (_activeDeck is null || _activeDeck.Slides.Count == 0)
+        {
+            return;
+        }
+
+        var targetIndex = Math.Clamp(index, 0, _activeDeck.Slides.Count - 1);
+        if (targetIndex == _currentSlideIndex)
+        {
+            return;
+        }
+
+        _currentSlideIndex = targetIndex;
+        RaiseDeckChanged();
+    }
+
     public void ToggleBlank()
     {
         _overlayMode = _overlayMode == PresentationOverlayMode.Blank

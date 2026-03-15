@@ -234,6 +234,71 @@ public sealed partial class MainWindowViewModel
         PresentDeck(QuickSelectHymn);
     }
 
+    private void QueueLibrarySong(SongDocument? song)
+    {
+        if (song is null)
+        {
+            return;
+        }
+
+        SelectedLibrarySong = song;
+        AddDeckToPlan(song);
+    }
+
+    private void PresentLibrarySong(SongDocument? song)
+    {
+        if (song is null)
+        {
+            return;
+        }
+
+        SelectedLibrarySong = song;
+        PresentDeck(song);
+    }
+
+    private void PresentServicePlanItem(ServicePlanEntry? entry)
+    {
+        if (entry is null)
+        {
+            return;
+        }
+
+        SelectedServicePlanEntry = entry;
+        PresentDeck(entry.Deck);
+    }
+
+    private void RemoveServicePlanItem(ServicePlanEntry? entry)
+    {
+        if (entry is null)
+        {
+            return;
+        }
+
+        SelectedServicePlanEntry = entry;
+        RemoveSelectedPlanItem();
+    }
+
+    private void JumpToSlide(SlideSection? slide)
+    {
+        if (slide is null || Presentation.ActiveDeck is null)
+        {
+            return;
+        }
+
+        var targetIndex = Presentation.ActiveDeck.Slides.FindIndex(section => ReferenceEquals(section, slide));
+        if (targetIndex < 0)
+        {
+            targetIndex = Presentation.ActiveDeck.Slides.FindIndex(section => section.Order == slide.Order);
+        }
+
+        if (targetIndex < 0)
+        {
+            return;
+        }
+
+        Presentation.GoToSlide(targetIndex);
+    }
+
     private void AddSelectedSongToPlan()
     {
         if (SelectedLibrarySong is null)
@@ -345,7 +410,7 @@ public sealed partial class MainWindowViewModel
     private void PresentDeck(SongDocument deck)
     {
         Presentation.PresentSong(deck);
-        ShowPresenter();
+        ShowSlideshow();
     }
 
     private void UpdateQuickSelectHymn()
