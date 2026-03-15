@@ -1,0 +1,84 @@
+<Window x:Class="NativeHymnsApp.Views.PresenterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Presenter"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowState="Maximized"
+        Background="{Binding DisplayBackgroundBrush}"
+        ShowInTaskbar="False"
+        Topmost="True"
+        KeyDown="PresenterWindow_OnKeyDown">
+    <Grid Background="{Binding DisplayBackgroundBrush}">
+        <Border Background="{Binding OverlayBrush}" />
+
+        <Grid Margin="64">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Visibility="{Binding HasActiveDeck, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock FontFamily="{Binding TitleFontFamily}"
+                           FontSize="{Binding TitleFontSize}"
+                           FontWeight="Bold"
+                           Foreground="{Binding ForegroundBrush}"
+                           Text="{Binding DeckTitle}"
+                           TextWrapping="Wrap" />
+                <TextBlock Margin="0,10,0,0"
+                           Foreground="{Binding AccentBrush}"
+                           FontSize="20"
+                           Text="{Binding DeckSubtitle}" />
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <StackPanel VerticalAlignment="Center"
+                            Visibility="{Binding HasActiveDeck, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Foreground="{Binding AccentBrush}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Text="{Binding SlideHeading}" />
+                    <TextBlock Margin="0,26,0,0"
+                               FontFamily="{Binding BodyFontFamily}"
+                               FontSize="{Binding BodyFontSize}"
+                               Foreground="{Binding ForegroundBrush}"
+                               Text="{Binding SlideText}"
+                               TextAlignment="{Binding DisplayTextAlignment}"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center"
+                            Visibility="{Binding IsIdle, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock FontFamily="{Binding TitleFontFamily}"
+                               FontSize="42"
+                               FontWeight="Bold"
+                               Foreground="{Binding ForegroundBrush}"
+                               HorizontalAlignment="Center"
+                               Text="Ready To Present" />
+                    <TextBlock Margin="0,16,0,0"
+                               FontSize="22"
+                               Foreground="{Binding AccentBrush}"
+                               HorizontalAlignment="Center"
+                               Text="Choose a hymn or service item from the operator window." />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="2" Visibility="{Binding HasActiveDeck, Converter={StaticResource BoolToVisibility}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Foreground="{Binding AccentBrush}" FontSize="18" Text="{Binding FooterText}" />
+                <TextBlock Grid.Column="1" Foreground="{Binding ForegroundBrush}" FontSize="18" Text="{Binding SlideCounterText}" />
+            </Grid>
+        </Grid>
+
+        <Border Background="#FFF8F3" Visibility="{Binding IsBlankScreen, Converter={StaticResource BoolToVisibility}}" />
+        <Border Background="Black" Visibility="{Binding IsBlackScreen, Converter={StaticResource BoolToVisibility}}" />
+    </Grid>
+</Window>

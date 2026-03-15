@@ -1,0 +1,65 @@
+hymn_number,title,verse_number,text,source_paragraphs,review_flags
+1,U BLEI UBA HALOR BAROH,1,"Don Uwei U Blei ha byneng, U Trai ia baroh ba la seng: U synshar hi na mynbarim: Ngan ieit, ngan iaroh katba im.",4,
+1,U BLEI UBA HALOR BAROH,2,"Ki hukum don ba U la ai, Ban hikai ia ka mon U Trai; Ngan ngeit ka ktien jong U ba neh, Ba kaba hok, ba shisha eh.",5,
+1,U BLEI UBA HALOR BAROH,3,"La wan ka Gospel Blei ha ngi, Ka jingsuk jai na ka la mih; Ha ka, Ah Blei, ngin shem ia Me, Ai bor ngin wad nongrim ba neh.",6,
+1,U BLEI UBA HALOR BAROH,4,"La buh ka por ia nga ban iap, Leh kyndit eh ia nga kan lap; Ki samla bad ki khynnah ruh Ki íap, ban khreh ngan ym tud shuh.",7,
+1,U BLEI UBA HALOR BAROH,5,"Ngan sumar ia ki por ba sah; To wan, Mynsiem, pynkhreh ia nga; Tang lap ka jingiap ngam lah phai, Ka aiom wad jingmap la wai.",8,
+2,KA JINGDON U BLEI,1,"Ka khyndew long ka jong U Trai, Jingdap kyrhai de jong ka; Ka pyrthei bad ki briew ki long, Ki jong U Trai ki paidbah.",12,
+2,KA JINGDON U BLEI,2,"Ka nongrim jong ka U la seng, Hapdeng ki um ka duriaw; Ha jingshlei um U pynskhem bha, Ia ka, ngi shngain ban kynmaw.",13,
+2,KA JINGDON U BLEI,3,"Uei ban kiew sha ïing U Trai, Ban ym phai khymat nangta? Ha lum ba kyntang Me, Ah Blei, Uei un ioh ieng hangta?",14,
+2,KA JINGDON U BLEI,4,"Riewkhuid ka dohnud bad ki kti, Bym iaid ha lynti jubor; Sha kaba thala um ju phai, Um smai da kaba shukor.",15,
+2,KA JINGDON U BLEI,5,"Jingkyrkhu na U Trai un ioh, Ban kerkut baroh sawdong; Ka hok de na U Blei ba im, Ka jingpynim ba pynlong.",16,
+2,KA JINGDON U BLEI,6,"Ka pateng bynriew ba ju wad, L’U Kynrad ka long kane; Ah Blei u Jakob! Ki iadem, Ban shem ka khymat jong Me.",17,
+3,KA JINGIAROH IA UWEI-LAI,1,"Bakhuid, Bakhuid, Bakhuid, Bakhrawbor,
+Ah Blei!
+Dang step phyrngab, Kynrad, ngi riwai
+nguh ia Me; Bakhuid, Bakhuid, Bakhuid, khlaiń bad
+dap jingisnei, Lai ngut ba tang Wei long U Trai ba neh!","20,21,22,23,24",
+3,KA JINGIAROH IA UWEI-LAI,2,"Bakhuid, Bakhuid, Bakhuid, riewkhuid ki
+iaroh,
+Baroh ki pangsngiat ksiar, ki loit ban nguh
+ia Me;
+Kherub bad ki Seraph ki mane dems
+baroh,
+Ia Me ba junom Ujuh Me iaineh.","26,27,28,29,30,31,32",contains_known_ocr_artifact
+3,KA JINGIAROH IA UWEI-LAI,3,"Bakhuid, Bakhuid, Bakhuid, b'la tap da
+u lyoh;
+U briew ba pop ban peit ban i ia Me
+um lah;
+Ma Me bad tang ma Me, Bakhuid ba dei
+Iaroh,
+Ka bor, jingieit, jingkhuid, ha Me ki sah.","35,36,37,38,39,40,41",
+3,KA JINGIAROH IA UWEI-LAI,4,"Bakhuid, Bakhuid, Bakhuid, Bakhrawbor, Ah Blei!
+Pyrthei, byneng, baroh ki kyntiew nam
+ia Me; Bakhuid, Bakhuid, Bakhuid, khlain bad dap jingisnei, Lai ngut ba tang Wei long U Trai ba neh!","43,44,45",
+4,KA JINGDON U BLEI HA KI JAKA BAROH,1,"Shano ngan leit, shano ngan im. Na U Mynsiem U jong Me? Shano ngan phet, shano ngan rieh, Na khymat shain ka jong Me?",48,
+4,KA JINGDON U BLEI HA KI JAKA BAROH,2,"La sha byneng nga ioh ban kiew, Ah Trai ki paid! Me hangta; La thiah ruh ha dujok hi, Ha khymih Me don hangta.",49,
+4,KA JINGDON U BLEI HA KI JAKA BAROH,3,"La kum u sim ngan her noh stet, Ngan phet sha kut ka duriaw; U Trai Un lam wat hangta hi, Un ri ruh ioh ngan mynsaw.",50,
+4,KA JINGDON U BLEI HA KI JAKA BAROH,4,"Lada nga ong, ""Ka jingdum tliw, Ia nga u briew, kan buhrieh; Ka miet kan tyngshain kum mynsngi,"" U khymi ka dohnud Me tip bha, Ia nga ruh Me la tynjuh; Kaba nga shong, kaba nga khih, Ka jingmut hi Me sngewthuh.",51,possible_overlap_with_hymn_5_verse_1
+5,KA JINGSUMAR SUKHER U BLEI,1,"Ah Trai, ka dohnud Me tip bha, Ia nga ruh Me la tynjuh; Kaba nga shong, kaba nga khih, Ka jingmut hi Me sngewthuh.",54,
+5,KA JINGSUMAR SUKHER U BLEI,2,"Ka jingiaid jong nga Me îit bha, Dei Me ba da jingthiah; Ki lynti jong nga baroh ruh, A Ithuh ma Me da shisha.",55,
+5,KA JINGSUMAR SUKHER U BLEI,3,"Ha khymih, Trai, Me tip ma Me, Ki jingleh jong nga baroh; Ki jingpyrkhat ym lah buhrieh. Na Me hi lano lano.",56,
+6,KA JINGIAROH IA U BLEI,1,"To iaroh jam sngewbha i' U Trai, Ma phi ka pyrthei baroh; To shakri ruh i' U Trai, to wan Hajan da ka jingiaroh.",59,
+6,KA JINGIAROH IA U BLEI,2,"To tip b'U Trai long Blei ba khraw, Uba la thaw ngi kumne; Ngi long ki langbrot jong U hi, all Ia ngi, U ri ia lade.",60,contains_known_ocr_artifact
+6,KA JINGIAROH IA U BLEI,3,"Shakhyrdop jong U leit da nguh, Sha ïing jong U da kyrmer I' U Trai jong ngi to wan ainguh To kyrkhu ia ka kyrteng.",61,
+6,KA JINGIAROH IA U BLEI,4,"Namar U Trai U long ba bha, Kam kylla ka jingisnei; Jingshisha jong U kan Isaiah, Ia baroh pateng bynriew.",62,contains_known_ocr_artifact
+7,KA JINGSHANIAH HA U TRAI,1,"Ngan khymih sha ki lum ngan ap. Ka jingiarap na shatei; Ka jingiarap ia nga Un ai, U Trai b’la thaw ka pyrthei.",65,
+7,KA JINGSHANIAH HA U TRAI,2,"Um shah ka kyjat ban syntuid, Ngan iaid laitluid khlem bakla; U sumar bha ki Israel hi, Ha khymih Um samthiah.",66,
+7,KA JINGSHANIAH HA U TRAI,3,"Ha kti kamon jong me, long Blei, T U Trai ba dei nongsumar; Ka sngi, u bnai, Um shah ban shoh, Men lait baroh jingjynjar.",67,
+7,KA JINGSHANIAH HA U TRAI,4,"U Trai Un sumar hi ia me, Na jong ki jingleh bymman; Un ri Un pyndap ka mynsiem, U Nongiarap ba hajan.",68,
+7,KA JINGSHANIAH HA U TRAI,5,"Haba me shong haba me khih, Uا Trai Un ri da shisha; Bad naduh mynta long ma U, Nongsumar ha la ka rta.",69,"contains_known_ocr_artifact,contains_non_latin_character"
+8,U BLEI U NONGTHAW,1,"To iaroh ia U Syiem byneng, U long U Trai ki trai kylleng; Ha U ka jingim lut ka shong, Na bymjukut. U ju iai long.",72,
+8,U BLEI U NONGTHAW,2,"Ka sahit byneng U la tei, Utol UE I Kaba sydien ha neng pyrthei; ud A Ka sngi, u bnai, ki khlur jingshai, Ba iaid ha neng ki nguh i U Trái. 12",73,"contains_known_ocr_artifact,contains_trailing_page_number"
+8,U BLEI U NONGTHAW,3,"U Trai, ia baroh long U Blei, Ha suin, ha um, bad ha pyrthei; Ki jingthaw phar, bad rit bad khraw, Ki long ki jong U Trai Nongthaw.",74,
+8,U BLEI U NONGTHAW,4,"U khymih thuh ia ngi ki briew, U ïit ka jylliew dohnud sniew; Shaneng shapoh ym lah ban rich, Ka jingmut shapoh U iohi.",75,
+8,U BLEI U NONGTHAW,5,"Ka burom jong U kan sa paw, Na kiei kiei b’U la thaw; U Jingiaroh kaba khraw kan mih, I’U Blei Uba la thaw ia ngi.",76,
+8,U BLEI U NONGTHAW,6,"Ki lum, ki duriaw, sawa shai, Ka bor bad ka jingstad U Trai; Ki jingthaw baroh ha pyrthei, Ki ong ba Uba khraw U Blei.",77,
+9,LAI NGUT HA UWEI U BLEI,1,"I’U Blei U Kpa to ngin ia-ai, s Ka burom, bad i’U Khun, U Trai; I’U Blei Mynsiem ba ai jingkhuid, Sha lynti sniew ba ngim syntuid.",80,
+9,LAI NGUT HA UWEI U BLEI,2,"U Kpa, U Khun bad U Mynsiem, Na bymjukut ki long syriem; Na junom junom Uwei Lai, nii Jingmaian hi bym lah shem trai.",81,contains_known_ocr_artifact
+9,LAI NGUT HA UWEI U BLEI,3,"To ai ka jingaiei U Khun, my Ka jingieit jong U Kpa sybun; Bad jingiasyllok U Mynsiem, de Kin iai long lem ba ngin ioh im.",82,contains_known_ocr_artifact
+10,KA JINGSUMAR SUKHER U BLEI,1,"Ai ba da ka mynsiem hun, Ngin iaroh i’U Trai sybun; Namar ki jingisnei jong U. Kin neh skhem, kin ym ju duh.",85,
+10,KA JINGSUMAR SUKHER U BLEI,2,"Ai ba ngin da pynphriang, Kylleng ia la ka kyrteng; Namar ki jingisnei jong U, Kin neh skhem, kin ym ju duh.",86,
+10,KA JINGSUMAR SUKHER U BLEI,3,"Te ka burom Blei kan paw, Ha ki byneng b’U la thaw; Namar ki jingisnei jong U. Kin neh skhem, kin ym ju duh.",87,
+10,KA JINGSUMAR SUKHER U BLEI,4,"U pynshai ia ka pyrthei, norm Da ka bor ka jingaiei; fen Namar ki jingisnei jong U. Lion Kin neh skhem, kin ym ju duh.",88,contains_known_ocr_artifact
+10,KA JINGSUMAR SUKHER U BLEI,5,"La ka kti dap lin U plie, Bad U synshar marwei hi; for nad d Namar ki jingisnei jong U. Kin neh skhem, kin ym ju duh.",89,contains_known_ocr_artifact
+10,KA JINGSUMAR SUKHER U BLEI,6,"Da la khmat isnei U khmih, Ha ngi haba long rangli; Namar ki jingisnei jong U, Kin neh skhem, kin ym ju duh.",90,

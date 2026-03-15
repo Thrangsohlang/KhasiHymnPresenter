@@ -1,0 +1,25 @@
+# Build outputs
+bin/
+obj/
+.buildtmp/
+
+# IDE and local tool state
+.vs/
+.vscode/
+.idea/
+.dotnet/
+.templateengine/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Logs and caches
+*.log
+
+# Local scratch files
+NativeHymnsApp/MainWindow.xaml.new
+**/write-test.txt
+**/smoke-test.txt
+**/test_patch.txt
